@@ -1,4 +1,4 @@
-    from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 def get_main_keyboard(is_admin: bool) -> ReplyKeyboardMarkup:
     buttons = [
