@@ -6,7 +6,7 @@ from config import BOT_TOKEN
 from keyboards.menu import get_main_keyboard
 from utils.auth import is_admin
 
-from handlers import user, admin, support
+from handlers import admin, support, start, user
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(bot)
@@ -16,10 +16,10 @@ async def start_handler(message: Message):
     keyboard = get_main_keyboard(is_admin(message.from_user.id))
     await message.answer("Добро пожаловать!", reply_markup=keyboard)
 
-# Регистрируем обработчики
-support.register_handlers(dp)
+# после инициализации dp
 start.register_handlers(dp)
 user.register_handlers(dp)
+support.register_handlers(dp)
 admin.register_handlers(dp)
 
 if __name__ == "__main__":
