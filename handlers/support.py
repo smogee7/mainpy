@@ -2,7 +2,8 @@ from aiogram import types, Dispatcher
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from keyboards.menu import get_main_keyboard
-from utils.auth import is_admin
+from utils.auth import is_admin, ADMINS
+from utils.messages import add_message
 
 class SupportStates(StatesGroup):
     waiting_for_message = State()
@@ -16,24 +17,21 @@ async def support_receive(message: types.Message, state: FSMContext):
     user_name = message.from_user.full_name
     user_message = message.text
 
-    # Сохраняем обращение в базу (позже реализуем)
-    with open("user_messages.txt", "a", encoding="utf-8") as f:
-        f.write(f"{user_id} | {user_name} | {user_message}\n")
+    message_id = add_message(user_id, user_name, user_message)
 
     await message.answer("Спасибо за ваше обращение! Мы обязательно ответим.", reply_markup=get_main_keyboard(is_admin(user_id)))
+
+    # Уведомляем админов с ID обращения
+    for admin_id in ADMINS:
+        try:
+            await message.bot.send_message(admin_id, f"Новое обращение #{message_id} от {user_name} (ID: {user_id}):\n{user_message}")
+        except Exception as e:
+            print(f"Ошибка при отправке уведомления админу {admin_id}: {e}")
+
     await state.finish()
 
 async def cancel_handler(message: types.Message, state: FSMContext):
     await message.answer("Отмена обращения.", reply_markup=get_main_keyboard(is_admin(message.from_user.id)))
-    await state.finish()
-    
-        # Уведомляем админов
-    for admin_id in ADMINS:
-        try:
-            await message.bot.send_message(admin_id, f"Новое обращение от {user_name} (ID: {user_id}):\n{user_message}")
-        except Exception as e:
-            print(f"Ошибка при отправке уведомления админу {admin_id}: {e}")
-
     await state.finish()
 
 def register_handlers(dp: Dispatcher):
