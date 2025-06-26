@@ -6,17 +6,13 @@ from config import BOT_TOKEN
 from keyboards.menu import get_main_keyboard
 from utils.auth import is_admin
 
-from handlers import user, admin
+from handlers import start, user, admin  # Объединённый импорт
 
-from handlers import start, user, admin
-
-start.register_handlers(dp)
-user.register_handlers(dp)
-admin.register_handlers(dp)
-
+# Сначала создаём бота и диспетчер
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(bot)
 
+# Обработчик команды /start
 @dp.message_handler(commands=['start'])
 async def start_handler(message: Message):
     keyboard = get_main_keyboard(is_admin(message.from_user.id))
