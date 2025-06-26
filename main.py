@@ -8,6 +8,12 @@ from utils.auth import is_admin
 
 from handlers import user, admin
 
+from handlers import start, user, admin
+
+start.register_handlers(dp)
+user.register_handlers(dp)
+admin.register_handlers(dp)
+
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(bot)
 
