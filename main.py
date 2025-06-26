@@ -23,6 +23,7 @@ async def start_handler(message: Message):
     await message.answer("Добро пожаловать!", reply_markup=keyboard)
 
 # Регистрируем обработчики
+start.register_handlers(dp)
 user.register_handlers(dp)
 admin.register_handlers(dp)
 
