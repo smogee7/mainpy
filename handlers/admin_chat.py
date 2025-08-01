@@ -47,4 +47,16 @@ async def start_reply(callback: CallbackQuery, state: FSMContext):
 
 # Админ ввёл ответ — отправляем пользователю
 @router.message(AnswerState.waiting_for_answer)
-async def send_reply_to
+async def send_reply_to_user(message: Message, state: FSMContext):
+    data = await state.get_data()
+    user_id = data.get("target_user_id")
+
+    try:
+        await message.bot.send_message(
+            chat_id=user_id,
+            text=f"💬 Ответ от администратора:\n\n{message.text}"
+        )
+        await message.answer("✅ Ответ отправлен.")
+    except Exception as e:
+        await message.answer(f"❌ Не удалось отправить сообщение:\n{e}")
+    await state.clear()
