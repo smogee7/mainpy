@@ -1,9 +1,10 @@
 from aiogram import Router, types
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.filters import Command
 
 router = Router()
 
-from aiogram.filters import Command
+@router.message(Command("start"))
 async def start_cmd(msg: Message):
     kb = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="💸 Купить VPN", callback_data="buy_vpn")],
