@@ -3,6 +3,8 @@ from aiogram.types import CallbackQuery, Message, InlineKeyboardMarkup, InlineKe
 from config import ADMIN_ID
 from utils.logger import log_purchase
 from datetime import datetime
+from aiogram.filters import Command
+
 
 router = Router()
 user_states = {}  # Словарь: user_id -> ожидается ли чек оплаты
@@ -28,7 +30,7 @@ async def process_payment_screenshot(msg: Message):
         await msg.answer("Спасибо! Ожидайте подтверждение от администратора.")
         user_states[msg.from_user.id] = "waiting_key"
 
-@router.message(commands=["выдать"])
+@router.message(Command("start"))
 async def send_key(msg: Message):
     if msg.from_user.id != ADMIN_ID:
         return
