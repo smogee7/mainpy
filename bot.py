@@ -2,10 +2,11 @@ print("Бот стартует...")
 import asyncio
 from aiogram import Bot, Dispatcher
 from config import BOT_TOKEN
+from aiogram.fsm.storage.memory import MemoryStorage
 from handlers import start, buy, admin_chat
 
 bot = Bot(BOT_TOKEN)
-dp = Dispatcher()
+dp = Dispatcher(storage=MemoryStorage())
 
 # Регистрация роутеров
 dp.include_router(start.router)
